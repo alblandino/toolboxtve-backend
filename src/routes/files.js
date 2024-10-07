@@ -11,15 +11,26 @@ const transformLines = (lines) => {
 
     // Verificar si hay suficientes columnas para extraer los datos
     if (columns.length >= 4) {
-        const [file, text, number, hex] = columns
-        if (text && number && hex) result.push({ text, number: Number(number), hex }) // Agregamos a la respuesta
+      const [, text, number, hex] = columns
+      if (text && number && hex) result.push({ text, number: Number(number), hex }) // Agregamos a la respuesta
     }
   }
   return result
 }
 
+// Metodo para obtener todos los datos de todos los archivos
 export const getAll = async (req, res) => {
   try {
+    // Revisar si hay un parámetro `fileName`
+    const { fileName } = req.query
+
+    if (fileName) {
+      // Si existe, retornamos los datos de este archivo
+      const lines = await getFile(fileName)
+      const formatted = transformLines(lines)
+      if (formatted.length > 0) return res.status(200).json({ file: fileName, lines: formatted })
+    }
+
     // Obtener la lista de archivos
     const { files } = await getAllFiles()
 
@@ -27,14 +38,12 @@ export const getAll = async (req, res) => {
     const filesDetailsPromise = files.map(async (fileName) => {
       try {
         const lines = await getFile(fileName)
-        
+
         // Transformar las líneas del archivo al formato requerido
-        const transformedLines = transformLines(lines)
+        const formattedLines = transformLines(lines)
 
         // Si el archivo tiene contenido válido, retornarlo, de lo contrario omitirlo
-        if (transformedLines.length > 0) {
-          return { file: fileName, lines: transformedLines }
-        }
+        if (formattedLines.length > 0) return { file: fileName, lines: formattedLines }
 
         // Si no tiene contenido, retornar null
         return null
@@ -51,8 +60,14 @@ export const getAll = async (req, res) => {
     const filteredDetails = fileDetails.filter(detail => detail !== null)
 
     // Retornar la respuesta con los detalles de cada archivo
-    res.status(200).json([...filteredDetails])
+    return res.status(200).json([...filteredDetails])
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error al obtener los archivos' })
+    return res.status(500).json({ success: false, message: 'Error al obtener los archivos' })
   }
+}
+
+// Metodo para obtener el listado de archivos disponibles en el API
+export const getAvailableFiles = async (req, res) => {
+  const { files } = await getAllFiles()
+  return res.status(200).json(files)
 }
