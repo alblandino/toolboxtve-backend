@@ -28,7 +28,11 @@ export const getAll = async (req, res) => {
       // Si existe, retornamos los datos de este archivo
       const lines = await getFile(fileName)
       const formatted = transformLines(lines)
-      if (formatted.length > 0) return res.status(200).json({ file: fileName, lines: formatted })
+      if (formatted.length > 0) {
+        return res.status(200).json({ file: fileName, lines: formatted })
+      } else {
+        return res.status(404).json({ success: false, message: 'Archivo no encontrado o vacío' })
+      }
     }
 
     // Obtener la lista de archivos
@@ -59,6 +63,11 @@ export const getAll = async (req, res) => {
     // Filtrar los archivos vacíos o con errores (null)
     const filteredDetails = fileDetails.filter(detail => detail !== null)
 
+    // Si no hay archivos válidos, retornar un error
+    if (filteredDetails.length === 0) {
+      return res.status(404).json({ success: false, message: 'Error al obtener los archivos' })
+    }
+
     // Retornar la respuesta con los detalles de cada archivo
     return res.status(200).json([...filteredDetails])
   } catch (error) {
@@ -69,5 +78,8 @@ export const getAll = async (req, res) => {
 // Metodo para obtener el listado de archivos disponibles en el API
 export const getAvailableFiles = async (req, res) => {
   const { files } = await getAllFiles()
+  if (!files || files.length === 0) {
+    return res.status(404).json({ success: false, message: 'No se encontraron archivos' })
+  }
   return res.status(200).json(files)
 }

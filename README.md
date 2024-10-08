@@ -1,3 +1,5 @@
+> **Disclaimer**: ayer envie un correo electronico con algunas dudas respecto a las pruebas unitarias y el mismo no fue respondido, entonces como tenia el tiempo encima con la entrega del proyecto tuve que enviarlo asi
+
 # 📺 ToolboxTV Challenge - Backend API
 
 ¡Bienvenidos al **Challenge Fullstack** para el puesto Fullstack (MERN Stack)! 🎉 Aquí veras un backend en Node.js que interactúa con una API externa, procesa archivos y maneja rutas con Express.js.
