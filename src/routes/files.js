@@ -12,13 +12,19 @@ const transformLines = (lines) => {
     // Verificar si hay suficientes columnas para extraer los datos
     if (columns.length >= 4) {
       const [, text, number, hex] = columns
-      if (text && number && hex) result.push({ text, number: Number(number), hex }) // Agregamos a la respuesta
+
+      // Validar que `text`, `number` y `hex` existan y sean válidos
+      if (text && number && hex && !isNaN(number)) {
+        result.push({ text, number: Number(number), hex }) // Agregamos a la respuesta
+      }
     }
   }
-  return result
+
+  // Si no hay resultados válidos, retornar null para omitir el archivo
+  return result.length > 0 ? result : null
 }
 
-// Metodo para obtener todos los datos de todos los archivos
+// Método para obtener todos los datos de todos los archivos
 export const getAll = async (req, res) => {
   try {
     // Revisar si hay un parámetro `fileName`
@@ -28,7 +34,7 @@ export const getAll = async (req, res) => {
       // Si existe, retornamos los datos de este archivo
       const lines = await getFile(fileName)
       const formatted = transformLines(lines)
-      if (formatted.length > 0) {
+      if (formatted) {
         return res.status(200).json({ file: fileName, lines: formatted })
       } else {
         return res.status(404).json({ success: false, message: 'Archivo no encontrado o vacío' })
@@ -43,13 +49,15 @@ export const getAll = async (req, res) => {
       try {
         const lines = await getFile(fileName)
 
-        // Transformar las líneas del archivo al formato requerido
+        // Transformar las líneas del archivo al formato requerido y omitir archivos con datos incompletos
         const formattedLines = transformLines(lines)
 
         // Si el archivo tiene contenido válido, retornarlo, de lo contrario omitirlo
-        if (formattedLines.length > 0) return { file: fileName, lines: formattedLines }
+        if (formattedLines) {
+          return { file: fileName, lines: formattedLines }
+        }
 
-        // Si no tiene contenido, retornar null
+        // Si no tiene contenido o los datos están incompletos, retornar null
         return null
       } catch (error) {
         console.error(`Error al obtener los datos del archivo: ${fileName}`)
@@ -75,7 +83,7 @@ export const getAll = async (req, res) => {
   }
 }
 
-// Metodo para obtener el listado de archivos disponibles en el API
+// Método para obtener el listado de archivos disponibles en el API
 export const getAvailableFiles = async (req, res) => {
   const { files } = await getAllFiles()
   if (!files || files.length === 0) {
