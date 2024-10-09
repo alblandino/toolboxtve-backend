@@ -1,13 +1,13 @@
 import express from 'express'
 import 'dotenv/config'
-import { getAll as getAllFiles, getAvailableFiles } from './routes/files.js'
+import { getAll, getAvailableFiles } from './routes/files.js'
 
-const app = express() // Crear una instancia de Express
-const router = express.Router() // Crear un enrutador para manejar las rutas
+const app = express()
+const router = express.Router()
 
 // Rutas habilitadas
 router.get('/files/list', getAvailableFiles)
-router.get('/files/data', getAllFiles)
+router.get('/files/data', getAll)
 
 // Versionamiento de los endpoints
 app.use('/v1', router)
@@ -19,3 +19,5 @@ app.use((req, res) => res.status(404).json({ success: false, message: 'Recurso n
 app.listen(process.env.PORT, () => {
   console.log(`> Servidor iniciado en la url: http://${process.env.DOMAIN}:${process.env.PORT}/`)
 })
+
+export default app
