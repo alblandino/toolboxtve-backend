@@ -5,6 +5,11 @@ import { getAll, getAvailableFiles } from './routes/files.js'
 const app = express()
 const router = express.Router()
 
+app.use(cors({
+  origin: '*', // Permitir todos los orígenes
+  methods: ['GET'],
+}));
+
 // Rutas habilitadas
 router.get('/files/list', getAvailableFiles)
 router.get('/files/data', getAll)
