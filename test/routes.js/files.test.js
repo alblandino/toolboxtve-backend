@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, afterEach } from 'node:test'
+/* eslint-disable no-undef */
 import { expect } from 'chai'
 import sinon from 'sinon'
 import * as fileService from '../../src/services/files.js'
