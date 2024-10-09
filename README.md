@@ -1,4 +1,4 @@
-> **Disclaimer**: ayer envie un correo electronico con algunas dudas respecto a las pruebas unitarias y el mismo no fue respondido, entonces como tenia el tiempo encima con la entrega del proyecto tuve que enviarlo asi
+> **Disclaimer**: debido a las limitaciones tecnicas en nodejs 14 y chai, es imposible ejecutar pruebas escritas con sintaxis de moduloes ES6 en chai debido a la forma en como chai utiliza los modulos dentro de su paquete, entonces estuve utilizando flags experimentales y el modulo ESM de node con lo cual no fue efectivo pues entonces tuve que utilizar babel para transpilar el modulo ES6 de los tests (solo uso babel para los tests)
 
 # 📺 ToolboxTV Challenge - Backend API
 
@@ -23,12 +23,14 @@ Este proyecto es un backend en Node.js que se comunica con una API externa para 
 El proyecto utiliza estas herramientas y bibliotecas 👇:
 
 - **Node.js (v14.x)**: Nuestro entorno para ejecutar el backend.
-- **Express (v4.17.3)**: Framework para manejar las rutas de la API.
+- **Express (v4.17.1)**: Framework para manejar las rutas de la API.
 - **Axios (v1.7.7)**: Para hacer solicitudes HTTP a la API externa.
-- **dotenv (v16.4.5)**: Para gestionar variables de entorno.
-- **Mocha (v10.7.3)**: Framework de pruebas para asegurarnos que todo funcione bien.
-- **Chai (v5.1.1)**: Biblioteca para aserciones en las pruebas.
+- **dotenv (v8.2.0)**: Para gestionar variables de entorno.
+- **Babel (v7.x)**: Utilizado para transpilar el código de los tests.
+- **Mocha (v7.1.1)**: Framework de pruebas para asegurarnos de que todo funcione correctamente.
+- **Chai (v4.2.0)**: Biblioteca para aserciones en las pruebas.
 - **Sinon (v19.0.2)**: Para mocks y stubs en las pruebas.
+- **StandardJS**: Linter para asegurar consistencia en el código.
 - **Docker**: Para ejecutar la app en un contenedor.
 
 ## 📋 Requisitos
